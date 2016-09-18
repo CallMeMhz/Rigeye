@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+{% block body %}
+
+ <div class="container-fluid">
+ 	<div class="page-header">
+		<h1>Instances <small>TOTAL: 10</small></h1>
+ 	</div>
+	<div class="panel panel-default">
+		<table class="table table-hover">
+			<thead>
+			<tr>
+				<th>Name</th>
+				<th></th>
+				<th>Status</th>
+				<th style="width:150px">CPU</th>
+				<th style="width:150px">IOWait</th>
+				<th>LOAD15</th>
+				<th>Service</th>
+			</tr>
+			</thead>
+			<tbody>
+				{% for instance in instances %}
+					<tr>
+						<td><a href="#">{{ instance.node }}</a></td>
+						<td><span class="label label-default">{{ instance.os }}</span></td>
+						<td><span class="label label-{% if instance.status == 'MONITORING' %}success{% else %}danger{% endif %}">
+							{{ instance.status }}
+						</span></td>
+						<td>
+							<div class="progress">
+								<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ instance.cpu_percent }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ instance.cpu_percent }}%; color: black;">
+									{{ instance.cpu_percent }}%
+								</div>
+							</div>
+						</td>
+						<td>
+							<div class="progress" style="margin-bottom:0">
+								<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ instance.iowait }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ instance.iowait }}%; color: black;">
+									{{ instance.iowait }}%
+								</div>
+							</div>
+						</td>
+						<td>{{ instance.load15 }}</td>
+						<td><span class="label label-default">system</span></td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+{% endblock %}
