@@ -20,8 +20,11 @@
 
 <a href="#" class="mobile">MENU</a>
 
-<div class="main" style="overflow: hidden;">
+<div class="main" style="overflow: hidden; min-height: calc(100% - 50px)">
 	<div class="sidebar">
+		<div class="bar">
+			<p>Service and Monitor</p>
+		</div>
 		<ul id="nav">
 			<li {% if request.path == '/instances' %}class="active"{% endif %}>
 				<a href="{{ url_for('list_instances') }}"">
@@ -31,12 +34,16 @@
 				<a href="{{ url_for('dashboard') }}"">
 				<span class="glyphicon glyphicon-dashboard"></span> Dashboard</a>
 			</li>
-			<li><a href="#"><span class="glyphicon glyphicon-list-alt"></span> Events</a></li>
-			<li><a href="#"><span class="glyphicon glyphicon-warning-sign"></span> Alerts</a></li>
+			<li {% if request.path == '/events' %}class="active"{% endif %}>
+				<a href="{{ url_for('list_events')}}"><span class="glyphicon glyphicon-list-alt"></span> Events</a>
+			</li>
+			<li {% if request.path == '/alerts' %}class="active"{% endif %}>
+				<a href="l_for('list_alerts')}}"><span class="glyphicon glyphicon-warning-sign"></span> Alerts</a>
+			</li>
 		</ul>
 	</div>
 
-	<div class="content" style="z-index: 99999!important">
+	<div class="content">
 		{% block body %}{% endblock %}
 	</div>
 </div>

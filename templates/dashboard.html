@@ -22,7 +22,7 @@
 							var series = this.series[0];
 							var last_data;
 							setInterval(function () {
-								$.getJSON('/data/get_data/' + panel.instance_id, function (data) {
+								$.getJSON('/rest/get_latest_data/' + panel.instance_id, function (data) {
 									if (data.time != last_data) {
 										series.addPoint([data.time*1000, data[panel.module]], true, true);
 									}
@@ -33,7 +33,7 @@
 					}
 				},
 				title: {
-					text: panel.title,
+					text: 'Module: ' + panel.module,
 				},
 				subtitle: {
 					text: 'Instance_id: ' + panel.instance_id,
@@ -43,7 +43,7 @@
 					data: (function () {
 						var d = [];
 						$.ajaxSetup({async:false});
-						$.getJSON('/data/get_all_data/' + panel.instance_id + '/' + panel.module, function (data) {
+						$.getJSON('/rest/get_60_data/' + panel.instance_id + '/' + panel.module, function (data) {
 							d = data;
 						});
 						return d;
@@ -65,7 +65,7 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h3 class="panel-title">
-					<a href="#" title="Config this panel">{{ panel.title}}</a>
+					<a href="#" title="Config this panel">{{ panel.title }}</a>
 					<a href="/dashboard/remove/{{ panel._id }}" class="pull-right">Remove</a>
 				</h3>
 			</div>

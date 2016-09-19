@@ -24,7 +24,7 @@ body {
 	margin-left: 250px;
 	/*float*/: left;
 	width: calc(100% - 250px);
-	/*height: calc(100% - 50px);*/
+	min-height: calc(100% - 50px);
 	/*overflow-y: scroll;*/
 }
 
@@ -63,6 +63,13 @@ div#header {
 	margin-bottom: -99999px;
 	padding-top: 99999px;
 	padding-bottom: 99999px;
+}
+
+.sidebar .bar {
+	height: 25px;
+	color: #fff;
+	line-height: 25px;
+	text-align: center;
 }
 
 ul#nav {

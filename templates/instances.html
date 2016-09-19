@@ -6,17 +6,19 @@
 	
 	function getData() {
 		instances.forEach(function (instance) {
-			$.getJSON("/data/get_info/" + instance._id, function (data) {
+			$.getJSON("/rest/get_info/" + instance._id, function (data) {
 					if (data.status == 'MONITORING') {
 						$('#' + instance._id + ' td:eq(2) span').removeClass('label-danger');
 						$('#' + instance._id + ' td:eq(2) span').addClass('label-success');
+						$('#' + instance._id + ' td:eq(2) span').text(data.status);
 					} else {
 						$('#' + instance._id + ' td:eq(2) span').removeClass('label-success');
 						$('#' + instance._id + ' td:eq(2) span').addClass('label-danger');
+						$('#' + instance._id + ' td:eq(2) span').text(data.status);
 					}
 			});
 
-			$.getJSON("/data/get_data/" + instance._id, function (data) {
+			$.getJSON("/rest/get_latest_data/" + instance._id, function (data) {
 					if (data.cpu_percent>50) {
 						$('#' + instance._id + ' td .progress:eq(0) div').removeClass('progress-bar-success');
 						$('#' + instance._id + ' td .progress:eq(0) div').addClass('progress-bar-warning');
@@ -56,11 +58,11 @@
 			<thead>
 			<tr>
 				<th>Name</th>
-				<th></th>
-				<th>Status</th>
-				<th style="width:150px">CPU</th>
-				<th style="width:150px">IOWait</th>
-				<th>LOAD15</th>
+				<th width="50"></th>
+				<th width="100">Status</th>
+				<th width="150">CPU</th>
+				<th width="150">IOWait</th>
+				<th width="80">LOAD15</th>
 				<th>Service</th>
 			</tr>
 			</thead>

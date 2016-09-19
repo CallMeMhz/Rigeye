@@ -9,6 +9,8 @@ import multiprocessing
 import json
 
 TOKEN = ''
+# HOST = 'www.rigeye.top:3000'
+HOST = 'localhost:5000'
 
 def message(text):
 	print '[', time.ctime(), '] %s' % text
@@ -43,6 +45,7 @@ def get_bytes(t, iface=''):
 
 def monitor():
 	global TOKEN
+	global HOST
 	global tx_prev, rx_prev
 
 	while True:
@@ -93,7 +96,7 @@ def monitor():
 		}
 
 		headers = {'content-type': 'application/json'}
-		requests.post('http://localhost:5000/data/add_data', data=json.dumps(payload), headers=headers)
+		requests.post('http://'+ HOST +'/rest/add_data', data=json.dumps(payload), headers=headers)
 
 		message('Sent JSON...')
 
@@ -102,9 +105,10 @@ def monitor():
 
 def init():
 	global TOKEN
+	global HOST
 	token_local = ''
 	try:
-		token_file = open('.token', 'r')
+		token_file = open('.object_id', 'r')
 		token_local = token_file.readline()
 		token_file.close()
 		message('Read token successfully')
@@ -112,16 +116,18 @@ def init():
 			'token': token_local,
 			'node': platform.node(),
 			'os': platform.system(),
+			'status': 'MONITORING'
 		}
 	except:
 		payload = {
 			'node': platform.node(),
 			'os': platform.system(),
+			'status': 'MONITORING'
 		}
 
 	headers = {'content-type': 'application/json'}
-	TOKEN = requests.post('http://localhost:5000/data/add_info', data=json.dumps(payload), headers=headers).text
-	token_file = open('.token', 'w')
+	TOKEN = requests.post('http://'+ HOST +'/rest/add_info', data=json.dumps(payload), headers=headers).text
+	token_file = open('.object_id', 'w')
 	token_file.write(TOKEN)
 	token_file.close()
 	if TOKEN != token_local:

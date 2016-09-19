@@ -3,39 +3,84 @@
 
 <link rel="stylesheet" href="{{ url_for('static', filename='style/index.css') }}">
 
+<script src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
+
 <div class="banner container">
-	<p>MESSAGE: balabala</p>
+	<p>MESSAGE: This is a banner.</p>
 </div>
 
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-md-8">
-			<div class="panel panel-default">
+			<div class="panel">
+				<div class="panel-heading">
+					<h3 class="panel-title">User Account</h3>
+				</div>
 				<div class="panel-body">
-					User Account
+					<h1>Welcome back, callmemhz@gmail.com</h1>
+					<h4>Last login at 2016-09-17 17:21:16</h4>
 				</div>
 			</div>
 		</div>
 		<div class="col-md-4">
-			<div class="panel panel-default">
-				<div class="panel-body">
-					AD
-				</div>
-			</div>
+		<div class="list-group">
+			<a href="#" class="list-group-item">
+				AD Block
+			</a>
+			<a href="#" class="list-group-item">Dapibus ac facilisis in</a>
+			<a href="#" class="list-group-item">Morbi leo risus</a>
+			<a href="#" class="list-group-item">Porta ac consectetur ac</a>
+		</div>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-md-8">
-			<div class="panel panel-default">
+			<div class="panel">
+				<div class="panel-heading">
+					<h3 class="panel-title">Events Statistics</h3>
+				</div>
 				<div class="panel-body">
-					Events Statics
+					<div class="alert alert-danger" role="alert">
+						Danger Events:
+						<strong>{{ events_statistics.danger }}</strong>
+					</div>
+					<div class="alert alert-warning" role="alert">
+						Warning Events:
+						<strong>{{ events_statistics.warning }}</strong>
+					</div>
+					<div class="alert alert-info" role="alert">
+						Normal Events:
+						<strong>{{ events_statistics.info }}</strong>
+					</div>
+					<div class="alert alert-success" role="alert">
+						Success Events:
+						<strong>{{ events_statistics.success }}</strong>
+					</div>
 				</div>
 			</div>
 		</div>
 		<div class="col-md-4">
-			<div class="panel panel-default">
+			<div class="panel">
+				<div class="panel-heading">
+					<h3 class="panel-title">TopN - Networking</h3>
+				</div>
 				<div class="panel-body">
-					TOPN
+					<div id="topnNetworking"></div>
+					<script>
+						$(function () {
+							data_topn = {{ data_topn|tojson }}
+
+							$('#topnNetworking').highcharts({
+								chart: {
+									type: 'bar'
+								},
+								title: {
+									text: 'TopN - Networking'
+								},
+								series: data_topn
+							});
+						});
+					</script>
 				</div>
 			</div>
 		</div>
