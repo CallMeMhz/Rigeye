@@ -20,8 +20,12 @@ body {
 }
 
 .content {
-	float: left;
+	min-width: calc(990px - 250px);
+	margin-left: 250px;
+	/*float*/: left;
 	width: calc(100% - 250px);
+	/*height: calc(100% - 50px);*/
+	/*overflow-y: scroll;*/
 }
 
 .logo a, .logo a:hover, .sidebar ul li a {
@@ -52,9 +56,13 @@ div#header {
 
 .sidebar {
 	width: 250px; 
-	height: calc(100% - 50px);
+	/*height: calc(100% - 50px);*/
 	background-color: #293038;
 	float: left;
+	margin-top: -99999px;
+	margin-bottom: -99999px;
+	padding-top: 99999px;
+	padding-bottom: 99999px;
 }
 
 ul#nav {
@@ -113,12 +121,15 @@ a.mobile:active {
 
 	.sidebar {
 		display: none;
+		float: none;
 		width: 100%;
 		height: auto;
 	}
 
 	.content {
 		width: 100%;
+		margin-left: 0;
+		min-width: 0;
 	}
 }
 

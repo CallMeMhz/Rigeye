@@ -1,9 +1,55 @@
 {% extends "layout.html" %}
 {% block body %}
 
+<script>
+	instances = {{ instances|tojson }};
+	
+	function getData() {
+		instances.forEach(function (instance) {
+			$.getJSON("/data/get_info/" + instance._id, function (data) {
+					if (data.status == 'MONITORING') {
+						$('#' + instance._id + ' td:eq(2) span').removeClass('label-danger');
+						$('#' + instance._id + ' td:eq(2) span').addClass('label-success');
+					} else {
+						$('#' + instance._id + ' td:eq(2) span').removeClass('label-success');
+						$('#' + instance._id + ' td:eq(2) span').addClass('label-danger');
+					}
+			});
+
+			$.getJSON("/data/get_data/" + instance._id, function (data) {
+					if (data.cpu_percent>50) {
+						$('#' + instance._id + ' td .progress:eq(0) div').removeClass('progress-bar-success');
+						$('#' + instance._id + ' td .progress:eq(0) div').addClass('progress-bar-warning');
+					} else {
+						$('#' + instance._id + ' td .progress:eq(0) div').removeClass('progress-bar-warning');
+						$('#' + instance._id + ' td .progress:eq(0) div').addClass('progress-bar-success');
+					}
+					$('#' + instance._id + ' td .progress:eq(0) div').css('width', data.cpu_percent + '%');
+					$('#' + instance._id + ' td .progress:eq(0) div').text(data.cpu_percent + '%');
+
+					if (data.iowait>20) {
+						$('#' + instance._id + ' td .progress:eq(1) div').removeClass('progress-bar-success');
+						$('#' + instance._id + ' td .progress:eq(1) div').addClass('progress-bar-warning');
+					} else {
+						$('#' + instance._id + ' td .progress:eq(1) div').removeClass('progress-bar-warning');
+						$('#' + instance._id + ' td .progress:eq(1) div').addClass('progress-bar-success');
+					}
+					$('#' + instance._id + ' td .progress:eq(1) div').css('width', data.iowait + '%');
+					$('#' + instance._id + ' td .progress:eq(1) div').text(data.iowait + '%');
+
+					$('#' + instance._id + ' td:eq(5)').text(data.lavg15);
+			});
+		});
+	}
+
+	$(function () {
+		setInterval("getData()", 1000);
+	});
+</script>
+
  <div class="container-fluid">
  	<div class="page-header">
-		<h1>Instances <small>TOTAL: 10</small></h1>
+		<h1>Instances <small>TOTAL: {{ instances|length }}</small></h1>
  	</div>
 	<div class="panel panel-default">
 		<table class="table table-hover">
@@ -20,7 +66,7 @@
 			</thead>
 			<tbody>
 				{% for instance in instances %}
-					<tr>
+					<tr id="{{ instance._id }}">
 						<td><a href="#">{{ instance.node }}</a></td>
 						<td><span class="label label-default">{{ instance.os }}</span></td>
 						<td><span class="label label-{% if instance.status == 'MONITORING' %}success{% else %}danger{% endif %}">
