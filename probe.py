@@ -3,14 +3,14 @@ import sys
 import os
 import socket
 import platform
-import requests
+import urllib2
 import time
 import multiprocessing
 import json
 
 TOKEN = ''
-# HOST = 'www.rigeye.top:3000'
-HOST = 'localhost:5000'
+HOST = 'www.rigeye.top:3000'
+# HOST = 'localhost:5000'
 
 def message(text):
 	print '[', time.ctime(), '] %s' % text
@@ -126,7 +126,11 @@ def init():
 		}
 
 	headers = {'content-type': 'application/json'}
-	TOKEN = requests.post('http://'+ HOST +'/rest/add_info', data=json.dumps(payload), headers=headers).text
+	# TOKEN = requests.post('http://'+ HOST +'/rest/add_info', data=json.dumps(payload), headers=headers).text
+	req = urllib2.Request('http://' + HOST + '/rest/add_info', json.dumps(payload), headers)
+	f = urllib2.urlopen(req)
+	TOKEN = f.read()
+	f.close()
 	token_file = open('.object_id', 'w')
 	token_file.write(TOKEN)
 	token_file.close()
