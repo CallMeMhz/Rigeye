@@ -97,9 +97,13 @@ def monitor():
 
 		headers = {'content-type': 'application/json'}
 		req = urllib2.Request('http://' + HOST + '/rest/add_data', json.dumps(payload), headers)
-		urllib2.urlopen(req)
 
-		message('Sent JSON...')
+		try:
+			urllib2.urlopen(req)
+			message('Sent JSON...')
+		except:
+			message('Sent JSON Faild')
+
 
 		tx_prev = tx
 		rx_prev = rx
