@@ -96,7 +96,8 @@ def monitor():
 		}
 
 		headers = {'content-type': 'application/json'}
-		requests.post('http://'+ HOST +'/rest/add_data', data=json.dumps(payload), headers=headers)
+		req = urllib2.Request('http://' + HOST + '/rest/add_data', json.dumps(payload), headers)
+		urllib2.urlopen(req)
 
 		message('Sent JSON...')
 

@@ -130,8 +130,7 @@ def add_data():
 @app.route('/rest/add_info', methods=['POST'])
 def add_info():
 	info = request.json
-	if info['token']:
-		print info['token']
+	if info.has_key('token'):
 		instance = db.instances.find_one(ObjectId(info['token']))
 		if instance:
 			return str(instance['_id'])
