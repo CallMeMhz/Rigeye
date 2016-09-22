@@ -3,7 +3,7 @@
 
 <div class="container-fluid">
 	<div class="page-header">
-		<h1>Events</h1>
+		<h1>Events <small>Total: {{ events|length }}</small></h1>
 	</div>
 	{% for event in events %}
 		<div class="panel panel-{{ event.level }}">
@@ -14,8 +14,8 @@
 				{{ event.content }}
 			</div>
 			<div class="panel-footer">
-				<!-- <strong>最后更新时间</strong>:{{ event.updatedAt }} -->
-				<strong>Time</strong>:{{ event.createdAt }}
+				<strong>Updated Time</strong>:{{ event.updatedAt|prettyTime }} 
+				<strong>Created Time</strong>:{{ event.createdAt|prettyTime }}
 			</div>
 		</div>
 	{% endfor %}

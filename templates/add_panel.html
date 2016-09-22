@@ -5,7 +5,7 @@
 	<div class="page-header">
 		<h1>Add Panel</h1>
 	</div>
-	<form action="/dashboard/insert" method="POST">
+	<form action="{{ url_for('insert_panel') }}" method="POST">
 		<div class="form-group">
 			<label>Instance:</label>
 			<select class="form-control" name="instance_id">

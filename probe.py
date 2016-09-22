@@ -8,9 +8,9 @@ import time
 import multiprocessing
 import json
 
-TOKEN = ''
-HOST = 'www.rigeye.top:3000'
-# HOST = 'localhost:5000'
+INSTANCE_ID = ''
+# HOST = 'www.rigeye.top:3000'
+HOST = 'localhost'
 
 def message(text):
 	print '[', time.ctime(), '] %s' % text
@@ -44,7 +44,7 @@ def get_bytes(t, iface=''):
 
 
 def monitor():
-	global TOKEN
+	global INSTANCE_ID
 	global HOST
 	global tx_prev, rx_prev
 
@@ -83,7 +83,7 @@ def monitor():
 		stat_fd.close()
 
 		payload = {
-			'instance_id': TOKEN,
+			'instance_id': INSTANCE_ID,
 			'cpu_percent': ((user_n - user) * 100 / jiffy) / num_cpu,
 			'iowait': ((iowait_n - iowait) * 100 / jiffy) / num_cpu,
 			'lavg1': load_stat()['lavg_1'],
@@ -109,16 +109,18 @@ def monitor():
 		rx_prev = rx
 
 def init():
-	global TOKEN
+	global INSTANCE_ID
 	global HOST
 	token_local = ''
 	try:
-		token_file = open('.object_id', 'r')
-		token_local = token_file.readline()
-		token_file.close()
+		fp = open('.instance_id', 'r')
+		token_local = fp.readline()
+		fp.close()
+
 		message('Read token successfully')
+
 		payload = {
-			'token': token_local,
+			'instance_id': token_local,
 			'node': platform.node(),
 			'os': platform.system(),
 			'status': 'MONITORING'
@@ -130,19 +132,20 @@ def init():
 			'status': 'MONITORING'
 		}
 
-	headers = {'content-type': 'application/json'}
-	# TOKEN = requests.post('http://'+ HOST +'/rest/add_info', data=json.dumps(payload), headers=headers).text
-	req = urllib2.Request('http://' + HOST + '/rest/add_info', json.dumps(payload), headers)
+	print token_local
+
+	req = urllib2.Request('http://' + HOST + '/rest/add_info', json.dumps(payload), {'content-type': 'application/json'})
 	f = urllib2.urlopen(req)
-	TOKEN = f.read()
+	INSTANCE_ID = f.read()
 	f.close()
-	token_file = open('.object_id', 'w')
-	token_file.write(TOKEN)
-	token_file.close()
-	if TOKEN != token_local:
+	
+	with open('.instance_id', 'w') as fp:
+		fp.write(INSTANCE_ID)
+
+	if INSTANCE_ID != token_local:
 		message('Register new token')
 
-	message('TOKEN: ' + TOKEN)
+	message('TOKEN: ' + INSTANCE_ID)
 
 if __name__ == '__main__':
 	init()

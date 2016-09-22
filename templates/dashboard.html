@@ -58,7 +58,7 @@
 	<div class="page-header">
 		<h1>
 			Panels <small>TOTAL: {{ panels|length }}</small>
-			<a class="btn btn-primary pull-right" id="addPanel" href="/dashboard/add">Add a panel</a>
+			<a class="btn btn-primary pull-right" href="{{ url_for('add_panel') }}">Add a panel</a>
 		</h1>
 	</div>
 	{% for panel in panels %}

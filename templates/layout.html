@@ -6,10 +6,12 @@
 <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
 <script src="{{ url_for('static', filename='script/general.js') }}"></script>
+<!--<script src="{{ url_for('static', filename='script/moment.js') }}"></script>-->
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#0084B0">
 
-<div id="header">
+<div id="topbar">
 	<div class="logo">
 		<a href="{{ url_for('index') }}">
 			<span class="glyphicon glyphicon-eye-open"></span>
@@ -20,7 +22,7 @@
 
 <a href="#" class="mobile">MENU</a>
 
-<div class="main" style="overflow: hidden; min-height: calc(100% - 50px)">
+<div class="main">
 	<div class="sidebar">
 		<div class="bar">
 			<p>Service and Monitor</p>
@@ -35,10 +37,10 @@
 				<span class="glyphicon glyphicon-dashboard"></span> Dashboard</a>
 			</li>
 			<li {% if request.path == '/events' %}class="active"{% endif %}>
-				<a href="{{ url_for('list_events')}}"><span class="glyphicon glyphicon-list-alt"></span> Events</a>
+				<a href="{{ url_for('list_events') }}"><span class="glyphicon glyphicon-list-alt"></span> Events</a>
 			</li>
-			<li {% if request.path == '/alerts' %}class="active"{% endif %}>
-				<a href="l_for('list_alerts')}}"><span class="glyphicon glyphicon-warning-sign"></span> Alerts</a>
+			<li {% if request.path == '/strategies' %}class="active"{% endif %}>
+				<a href="{{ url_for('list_strategies') }}"><span class="glyphicon glyphicon-warning-sign"></span> Alarm Strategies</a>
 			</li>
 		</ul>
 	</div>
