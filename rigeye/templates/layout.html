@@ -1,0 +1,52 @@
+<!doctype html>
+<title>Rigeye</title>
+
+<script src="{{ url_for('static', filename='script/jquery-3.1.0.min.js') }}"></script>
+<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+<script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
+<script src="{{ url_for('static', filename='script/general.js') }}"></script>
+<!--<script src="{{ url_for('static', filename='script/moment.js') }}"></script>-->
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#0084B0">
+
+<div id="topbar">
+	<div class="logo">
+		<a href="{{ url_for('index') }}">
+			<span class="glyphicon glyphicon-eye-open"></span>
+			Rig <span>Eye</span>
+		</a>
+	</div>
+</div>
+
+<a href="#" class="mobile">MENU</a>
+
+<div class="main">
+	<div class="sidebar">
+		<div class="bar">
+			<p>Service and Monitor</p>
+		</div>
+		<ul id="nav">
+			<li {% if request.path == '/instances' %}class="active"{% endif %}>
+				<a href="{{ url_for('list_instances') }}"">
+				<span class="glyphicon glyphicon-tasks"></span> Instances</a>
+			</li>
+			<li {% if request.path == '/dashboard' %}class="active"{% endif %}>
+				<a href="{{ url_for('dashboard') }}"">
+				<span class="glyphicon glyphicon-dashboard"></span> Dashboard</a>
+			</li>
+			<li {% if request.path == '/events' %}class="active"{% endif %}>
+				<a href="{{ url_for('list_events') }}"><span class="glyphicon glyphicon-list-alt"></span> Events</a>
+			</li>
+			<li {% if request.path == '/strategies' %}class="active"{% endif %}>
+				<a href="{{ url_for('list_strategies') }}"><span class="glyphicon glyphicon-warning-sign"></span> Alarm Strategies</a>
+			</li>
+		</ul>
+	</div>
+
+	<div class="content">
+		{% block body %}{% endblock %}
+	</div>
+</div>
+

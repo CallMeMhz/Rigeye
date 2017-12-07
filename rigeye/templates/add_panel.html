@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<div class="container-fluid">
+	<div class="page-header">
+		<h1>Add Panel</h1>
+	</div>
+	<form action="{{ url_for('insert_panel') }}" method="POST">
+		<div class="form-group">
+			<label>Instance:</label>
+			<select class="form-control" name="instance_id">
+				{% for instance in instances %}
+					<option value="{{ instance._id }}">{{ instance.node }}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<div class="form-group">
+			<label>Panel Title</label>
+			<input type="text" class="form-control" name="title" required="required" />
+		</div>
+		<div class="form-group">
+			<label>Module</label>
+			<select class="form-control" name="module">
+				<option value="cpu_percent">system.cpu_percent</option>
+				<option value="iowait">system.io.wait</option>
+				<option value="lavg1">system.lavg.1</option>
+				<option value="lavg5">system.lavg.5</option>
+				<option value="lavg15">system.lavg.15</option>
+				<option value="net_speed_r">system.net.r</option>
+				<option value="net_speed_t">system.net.t</option>
+			</select>
+		</div>
+		<input type="submit" class="btn btn-primary form-control" value="Add Panel" />
+	</form>
+</div>
+
+{% endblock %}

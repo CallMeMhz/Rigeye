@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<div class="container-fluid">
+	<div class="page-header">
+		<h1>Events <small>Total: {{ events|length }}</small></h1>
+	</div>
+	{% for event in events %}
+		<div class="panel panel-{{ event.level }}">
+			<div class="panel-heading panel">
+				{{ event.title }}
+			</div>
+			<div class="panel-body">
+				{{ event.content }}
+			</div>
+			<div class="panel-footer">
+				<strong>Updated Time</strong>:{{ event.updatedAt|prettyTime }} 
+				<strong>Created Time</strong>:{{ event.createdAt|prettyTime }}
+			</div>
+		</div>
+	{% endfor %}
+</div>
+
+{% endblock %}

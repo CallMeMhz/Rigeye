@@ -1,0 +1,100 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<script>
+	instances = {{ instances|tojson }};
+	
+	function getData() {
+		instances.forEach(function (instance) {
+			$.getJSON("/rest/get_info/" + instance._id, function (data) {
+					if (data.status == 'MONITORING') {
+						$('#' + instance._id + ' td:eq(2) span').removeClass('label-danger');
+						$('#' + instance._id + ' td:eq(2) span').addClass('label-success');
+						$('#' + instance._id + ' td:eq(2) span').text(data.status);
+					} else {
+						$('#' + instance._id + ' td:eq(2) span').removeClass('label-success');
+						$('#' + instance._id + ' td:eq(2) span').addClass('label-danger');
+						$('#' + instance._id + ' td:eq(2) span').text(data.status);
+					}
+			});
+
+			$.getJSON("/rest/get_latest_data/" + instance._id, function (data) {
+					if (data.cpu_percent>50) {
+						$('#' + instance._id + ' td .progress:eq(0) div').removeClass('progress-bar-success');
+						$('#' + instance._id + ' td .progress:eq(0) div').addClass('progress-bar-warning');
+					} else {
+						$('#' + instance._id + ' td .progress:eq(0) div').removeClass('progress-bar-warning');
+						$('#' + instance._id + ' td .progress:eq(0) div').addClass('progress-bar-success');
+					}
+					$('#' + instance._id + ' td .progress:eq(0) div').css('width', data.cpu_percent + '%');
+					$('#' + instance._id + ' td .progress:eq(0) div').text(data.cpu_percent + '%');
+
+					if (data.iowait>20) {
+						$('#' + instance._id + ' td .progress:eq(1) div').removeClass('progress-bar-success');
+						$('#' + instance._id + ' td .progress:eq(1) div').addClass('progress-bar-warning');
+					} else {
+						$('#' + instance._id + ' td .progress:eq(1) div').removeClass('progress-bar-warning');
+						$('#' + instance._id + ' td .progress:eq(1) div').addClass('progress-bar-success');
+					}
+					$('#' + instance._id + ' td .progress:eq(1) div').css('width', data.iowait + '%');
+					$('#' + instance._id + ' td .progress:eq(1) div').text(data.iowait + '%');
+
+					$('#' + instance._id + ' td:eq(5)').text(data.lavg15);
+			});
+		});
+	}
+
+	$(function () {
+		setInterval("getData()", 1000);
+	});
+</script>
+
+ <div class="container-fluid">
+ 	<div class="page-header">
+		<h1>Instances <small>TOTAL: {{ instances|length }}</small></h1>
+ 	</div>
+	<div style="overflow: auto; width: 100%; height: 100%;">
+	<table class="table table-hover">
+		<thead>
+		<tr>
+			<th>Name</th>
+			<th width="50"></th>
+			<th width="150">Status</th>
+			<th width="150">CPU</th>
+			<th width="150">IOWait</th>
+			<th width="50">LOAD15</th>
+			<th>Service</th>
+		</tr>
+		</thead>
+		<tbody>
+			{% for instance in instances %}
+				<tr id="{{ instance._id }}">
+					<td><a href="#">{{ instance.node }}</a></td>
+					<td><span class="label label-default">{{ instance.os }}</span></td>
+					<td><span class="label label-{% if instance.status == 'MONITORING' %}success{% else %}danger{% endif %}">
+						{{ instance.status }}
+					</span></td>
+					<td>
+						<div class="progress">
+							<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ instance.cpu_percent }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ instance.cpu_percent }}%; color: black;">
+								{{ instance.cpu_percent }}%
+							</div>
+						</div>
+					</td>
+					<td>
+						<div class="progress">
+							<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ instance.iowait }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ instance.iowait }}%; color: black;">
+								{{ instance.iowait }}%
+							</div>
+						</div>
+					</td>
+					<td>{{ instance.load15 }}</td>
+					<td><span class="label label-default">system</span></td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	</div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<script type="text/javascript" src="http://cdn.hcharts.cn/highstock/highstock.js"></script>
+<script src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
+
+<script>
+	$(function () {
+		Highcharts.setOptions({
+			global:{
+				useUTC:false
+			}
+		});
+
+		panels = {{ panels|tojson }};
+
+		panels.forEach(function (panel) {
+			$('#' + panel._id).highcharts('StockChart', {
+				chart: {
+					events: {
+						load: function () {
+							var series = this.series[0];
+							var last_data;
+							setInterval(function () {
+								$.getJSON('/rest/get_latest_data/' + panel.instance_id, function (data) {
+									if (data.time != last_data) {
+										series.addPoint([data.time*1000, data[panel.module]], true, true);
+									}
+									last_data = data.time;
+								});
+							}, 1000);
+						}
+					}
+				},
+				title: {
+					text: 'Module: ' + panel.module,
+				},
+				subtitle: {
+					text: 'Instance_id: ' + panel.instance_id,
+				},
+				series: [{
+					name: panel.module,
+					data: (function () {
+						var d = [];
+						$.ajaxSetup({async:false});
+						$.getJSON('/rest/get_60_data/' + panel.instance_id + '/' + panel.module, function (data) {
+							d = data;
+						});
+						return d;
+					}())
+				},],
+			});
+		});
+	});
+</script>
+
+<div class="container-fluid">
+	<div class="page-header">
+		<h1>
+			Panels <small>TOTAL: {{ panels|length }}</small>
+			<a class="btn btn-primary pull-right" href="{{ url_for('add_panel') }}">Add a panel</a>
+		</h1>
+	</div>
+	{% for panel in panels %}
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					<a href="#" title="Config this panel">{{ panel.title }}</a>
+					<a href="/dashboard/remove/{{ panel._id }}" class="pull-right">Remove</a>
+				</h3>
+			</div>
+			<div class="panel-body">
+				<div class="panelChart" id="{{ panel._id }}"></div>
+			</div>
+		</div>
+	{% endfor %}
+</div>
+
+{% endblock %}
